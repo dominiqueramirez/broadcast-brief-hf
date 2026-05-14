@@ -1,7 +1,7 @@
 {
   "name": "Broadcast Brief HF",
   "image": "mcr.microsoft.com/devcontainers/javascript-node:22",
-  "postCreateCommand": "npx --yes hyperframes@0.6.0 browser install",
+  "postCreateCommand": "sudo apt-get update && sudo apt-get install -y ffmpeg libnss3 libnspr4 libatk1.0-0 libatk-bridge2.0-0 libcups2 libdrm2 libxkbcommon0 libxcomposite1 libxdamage1 libxfixes3 libxrandr2 libgbm1 libasound2 && npx --yes hyperframes@0.6.0 browser install",
   "customizations": {
     "vscode": {
       "extensions": ["dbaeumer.vscode-eslint"]
