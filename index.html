@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1280, height=720" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@hyperframes/core/dist/hyperframe.runtime.iife.js"></script>
+    <style>
+      /* Font faces */
+      @font-face { font-family: 'Source Sans'; src: url('fonts/SourceSans.woff2') format('woff2'); font-weight: 400; font-display: block; }
+      @font-face { font-family: 'Source Sans'; src: url('fonts/SourceSans.woff2') format('woff2'); font-weight: 700; font-display: block; }
+      @font-face { font-family: 'Bitter'; src: url('fonts/bitter-regular.woff2') format('woff2'); font-weight: 400; font-display: block; }
+      @font-face { font-family: 'Bitter'; src: url('fonts/bitter-bold.woff2') format('woff2'); font-weight: 700; font-display: block; }
+      @font-face { font-family: 'Roboto Mono'; src: url('fonts/RobotoMono.woff2') format('woff2'); font-weight: 400; font-display: block; }
+      @font-face { font-family: 'Roboto Mono'; src: url('fonts/roboto-mono-700.woff2') format('woff2'); font-weight: 700; font-display: block; }
+
+      :root {
+        --va-primary: #005ea2;
+        --va-primary-dark: #1a4480;
+        --va-primary-darker: #162e51;
+        --va-gold: #ffbe2e;
+        --va-gold-light: #ffe396;
+        --va-white: #ffffff;
+        --font-display: 'Bitter', Georgia, serif;
+        --font-body: 'Source Sans', system-ui, sans-serif;
+        --font-mono: 'Roboto Mono', monospace;
+      }
+
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 1280px; height: 720px;
+        overflow: hidden;
+        background: var(--va-primary-darker);
+        font-family: var(--font-body);
+        -webkit-font-smoothing: antialiased;
+      }
+      .scene {
+        position: absolute; top: 0; left: 0;
+        width: 1280px; height: 720px;
+        overflow: hidden; color: #fff;
+      }
+      .clip {}
+
+      /* Grain overlay */
+      .grain {
+        position: absolute; inset: 0;
+        pointer-events: none; z-index: 50;
+        opacity: 0.12;
+        background-image:
+          radial-gradient(rgba(255,255,255,0.08) 1px, transparent 1.2px),
+          radial-gradient(rgba(0,0,0,0.18) 1px, transparent 1.2px);
+        background-size: 3px 3px, 5px 5px;
+        background-position: 0 0, 1px 2px;
+        mix-blend-mode: overlay;
+      }
+      .eyebrow {
+        font-family: var(--font-body);
+        font-size: 16px; font-weight: 700;
+        letter-spacing: 0.08em; text-transform: uppercase;
+        color: var(--va-gold);
+      }
+      .va-mark {
+        font-family: var(--font-display);
+        font-size: 20px; color: rgba(255,255,255,0.4);
+        letter-spacing: 0.02em;
+      }
+      .radial-light {
+        position: absolute; inset: 0;
+        background: radial-gradient(ellipse 60% 50% at 30% 40%, rgba(0,94,162,0.25) 0%, transparent 70%);
+      }
+
+      /* Slide 1 */
+      #s1-rule { position: absolute; top: 96px; left: 96px; height: 5px; width: 0; background: var(--va-gold); box-shadow: 0 0 24px rgba(255,190,46,0.4); }
+      #s1-seal { position: absolute; top: 96px; right: 96px; width: 168px; height: 168px; }
+      #s1-eyebrow { position: absolute; top: 124px; left: 96px; }
+      #s1-headline {
+        position: absolute; left: 96px; right: 320px; top: 196px;
+        font-family: var(--font-display); font-size: 64px; line-height: 1.12;
+        font-weight: 700; letter-spacing: -0.01em; text-wrap: pretty;
+      }
+      #s1-headline .word { display: inline-block; }
+      #s1-vamark { position: absolute; right: 96px; bottom: 96px; font-size: 24px; color: rgba(255,255,255,0.55); }
+
+      /* Slide 2 */
+      #s2-rule { position: absolute; top: 96px; left: 96px; height: 5px; width: 0; background: var(--va-gold); box-shadow: 0 0 24px rgba(255,190,46,0.4); }
+      #s2-eyebrow { position: absolute; top: 124px; left: 96px; }
+      #s2-seal { position: absolute; top: 96px; right: 96px; width: 80px; height: 80px; }
+      #s2-lead {
+        position: absolute; left: 96px; right: 200px; top: 210px; bottom: 160px;
+        display: flex; align-items: center;
+      }
+      #s2-lead p { font-family: var(--font-body); font-size: 36px; line-height: 1.45; font-weight: 400; text-wrap: pretty; }
+      #s2-vamark { position: absolute; right: 96px; bottom: 96px; }
+
+      /* Slide 3 */
+      #s3-bar { position: absolute; top: 200px; left: 96px; width: 5px; height: 0; background: var(--va-gold); box-shadow: 0 0 20px rgba(255,190,46,0.3); }
+      #s3-eyebrow { position: absolute; top: 124px; left: 96px; }
+      #s3-seal { position: absolute; top: 96px; right: 96px; width: 80px; height: 80px; }
+      #s3-nutgraph {
+        position: absolute; left: 130px; right: 200px; top: 200px; bottom: 160px;
+        display: flex; align-items: center;
+      }
+      #s3-nutgraph p { font-family: var(--font-body); font-size: 34px; line-height: 1.45; font-weight: 400; text-wrap: pretty; }
+      #s3-vamark { position: absolute; right: 96px; bottom: 96px; }
+
+      /* Slide 4 */
+      #s4-quotemark {
+        position: absolute; top: 80px; left: 80px;
+        font-family: var(--font-display); font-size: 200px; line-height: 1;
+        color: var(--va-gold); opacity: 0;
+      }
+      #s4-seal { position: absolute; top: 96px; right: 96px; width: 80px; height: 80px; }
+      #s4-quote {
+        position: absolute; left: 120px; right: 120px; top: 180px; bottom: 180px;
+        display: flex; flex-direction: column; justify-content: center;
+      }
+      #s4-quote p {
+        font-family: var(--font-display); font-size: 34px; line-height: 1.4;
+        font-weight: 400; font-style: italic; text-wrap: pretty;
+      }
+      #s4-attribution {
+        position: absolute; left: 120px; bottom: 120px;
+        display: flex; align-items: center; gap: 16px;
+      }
+      #s4-attr-line { width: 40px; height: 3px; background: var(--va-gold); }
+      #s4-attr-name { font-family: var(--font-body); font-size: 22px; font-weight: 700; color: var(--va-gold); letter-spacing: 0.02em; }
+
+      /* Slide 5 */
+      #s5 .scene-content {
+        display: flex; flex-direction: column; align-items: center;
+        justify-content: center; height: 100%;
+      }
+      #s5-seal { width: 180px; height: 180px; margin-bottom: 24px; filter: drop-shadow(0 8px 24px rgba(0,0,0,0.4)); }
+      #s5-cta-label { font-family: var(--font-display); font-size: 32px; font-weight: 700; color: var(--va-gold); letter-spacing: 0.01em; text-align: center; }
+      #s5-cta-url { font-family: var(--font-mono); font-size: 20px; color: rgba(255,255,255,0.85); letter-spacing: 0.02em; margin-top: 12px; text-align: center; }
+      #s5-rule { margin-top: 20px; height: 3px; width: 0; background: var(--va-gold); opacity: 0.6; }
+    </style>
+  </head>
+  <body>
+    <div
+      id="main"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="38"
+      data-width="1280"
+      data-height="720"
+    >
+      <div class="radial-light"></div>
+      <div class="grain"></div>
+
+      <!-- SLIDE 1 — HEADLINE (0-8s) -->
+      <div class="scene clip" id="s1" data-start="0" data-duration="8" data-track-index="0">
+        <div id="s1-rule"></div>
+        <img id="s1-seal" src="assets/va-seal.png" alt="" />
+        <div id="s1-eyebrow" class="eyebrow">For immediate release &middot; May 11, 2026</div>
+        <h1 id="s1-headline"><span class="word">VA</span> <span class="word">announces</span> <span class="word">nearly</span> <span class="word">$600M</span> <span class="word">in</span> <span class="word">infrastructure</span> <span class="word">improvements</span> <span class="word">in</span> <span class="word">second</span> <span class="word">quarter</span> <span class="word">of</span> <span class="word">FY</span> <span class="word">2026</span></h1>
+        <div id="s1-vamark" class="va-mark">U.S. Department of Veterans Affairs</div>
+      </div>
+
+      <!-- SLIDE 2 — THE LEAD (8-16s) -->
+      <div class="scene clip" id="s2" data-start="8" data-duration="8" data-track-index="0" style="visibility:hidden">
+        <div id="s2-rule"></div>
+        <div id="s2-eyebrow" class="eyebrow">The lead</div>
+        <img id="s2-seal" src="assets/va-seal.png" alt="" />
+        <div id="s2-lead"><p data-hf-text-key="child:0:p" style="font-size: 48px">Washington — The Department of Veterans Affairs has approved $596 million in VA infrastructure improvements in the second quarter of fiscal year 2026.</p></div>
+        <div id="s2-vamark" class="va-mark">U.S. Department of Veterans Affairs</div>
+      </div>
+
+      <!-- SLIDE 3 — NUT GRAPH (16-24s) -->
+      <div class="scene clip" id="s3" data-start="16" data-duration="8" data-track-index="0" style="visibility:hidden">
+        <div id="s3-bar"></div>
+        <div id="s3-eyebrow" class="eyebrow">In summary</div>
+        <img id="s3-seal" src="assets/va-seal.png" alt="" />
+        <div id="s3-nutgraph"><p data-hf-text-key="child:0:p" style="font-size: 48px">The approved funding will modernize aging VA medical facilities, improve accessibility for Veterans with disabilities, and expand capacity at VA health care centers serving Veterans nationwide.</p></div>
+        <div id="s3-vamark" class="va-mark">U.S. Department of Veterans Affairs</div>
+      </div>
+
+      <!-- SLIDE 4 — QUOTE (24-32s) -->
+      <div class="scene clip" id="s4" data-start="24" data-duration="8" data-track-index="0" style="visibility:hidden">
+        <div id="s4-quotemark">&ldquo;</div>
+        <img id="s4-seal" src="assets/va-seal.png" alt="" />
+        <div id="s4-quote"><p data-hf-text-key="child:0:p" style="font-size: 42px">“The Trump administration is making massive improvements in VA health care and benefits, and the veterans are noticing. The historic investments we made in VA facilities across the nation are the reason why we’ve added another 125,000 VA health care enrollees in 2026 alone.”</p></div>
+        <div id="s4-attribution">
+          <div id="s4-attr-line"></div>
+          <div id="s4-attr-name">Secretary Doug Collins</div>
+        </div>
+      </div>
+
+      <!-- SLIDE 5 — CTA (32-38s) -->
+      <div class="scene clip" id="s5" data-start="32" data-duration="6" data-track-index="0" style="visibility:hidden">
+        <div class="scene-content">
+          <img id="s5-seal" src="assets/va-seal.png" alt="" />
+          <div id="s5-cta-label">Read the full release</div>
+          <div id="s5-cta-url">news.va.gov</div>
+          <div id="s5-rule"></div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      var tl = gsap.timeline({ paused: true });
+
+      // Scene visibility toggles (autoAlpha for HyperFrames compatibility)
+      tl.set("#s1", { autoAlpha: 0 }, 8.0);
+      tl.set("#s2", { autoAlpha: 1 }, 8.0);
+      tl.set("#s2", { autoAlpha: 0 }, 16.0);
+      tl.set("#s3", { autoAlpha: 1 }, 16.0);
+      tl.set("#s3", { autoAlpha: 0 }, 24.0);
+      tl.set("#s4", { autoAlpha: 1 }, 24.0);
+      tl.set("#s4", { autoAlpha: 0 }, 32.0);
+      tl.set("#s5", { autoAlpha: 1 }, 32.0);
+
+      // === SLIDE 1 — HEADLINE (0-8s) ===
+      tl.to("#s1-rule", { width: 240, duration: 1.0, ease: "power4.out" }, 0.1);
+      tl.from("#s1-seal", { scale: 0.85, autoAlpha: 0, duration: 1.1, ease: "power2.out" }, 0.5);
+      tl.from("#s1-eyebrow", { y: 8, autoAlpha: 0, duration: 0.7, ease: "power2.out" }, 1.0);
+      tl.from("#s1-headline .word", {
+        y: 18, autoAlpha: 0, duration: 0.55, ease: "power3.out",
+        stagger: { each: 0.13, from: "start" },
+      }, 1.4);
+      tl.from("#s1-vamark", { autoAlpha: 0, duration: 0.6 }, 2.5);
+      tl.to("#s1", { autoAlpha: 0, duration: 1.0, ease: "power2.inOut" }, 7.0);
+
+      // === SLIDE 2 — THE LEAD (8-16s) ===
+      tl.to("#s2-rule", { width: 240, duration: 0.8, ease: "power4.out" }, 8.2);
+      tl.from("#s2-eyebrow", { y: 8, autoAlpha: 0, duration: 0.6, ease: "power2.out" }, 8.4);
+      tl.to("#s2-seal", { opacity: 0.6, duration: 0.7, ease: "power2.out" }, 8.3);
+      tl.from("#s2-lead", { y: 16, autoAlpha: 0, duration: 0.9, ease: "power3.out" }, 8.6);
+      tl.from("#s2-vamark", { autoAlpha: 0, duration: 0.5 }, 9.0);
+      tl.to("#s2", { autoAlpha: 0, duration: 1.0, ease: "power2.inOut" }, 15.0);
+
+      // === SLIDE 3 — NUT GRAPH (16-24s) ===
+      tl.to("#s3-bar", { height: 320, duration: 0.8, ease: "power4.out" }, 16.2);
+      tl.from("#s3-eyebrow", { y: 8, autoAlpha: 0, duration: 0.6, ease: "power2.out" }, 16.4);
+      tl.to("#s3-seal", { opacity: 0.6, duration: 0.7, ease: "power2.out" }, 16.3);
+      tl.from("#s3-nutgraph", { y: 16, autoAlpha: 0, duration: 0.9, ease: "power3.out" }, 16.6);
+      tl.from("#s3-vamark", { autoAlpha: 0, duration: 0.5 }, 17.0);
+      tl.to("#s3", { autoAlpha: 0, duration: 1.0, ease: "power2.inOut" }, 23.0);
+
+      // === SLIDE 4 — QUOTE (24-32s) ===
+      tl.to("#s4-quotemark", { opacity: 0.35, duration: 0.8, ease: "power2.out" }, 24.2);
+      tl.to("#s4-seal", { opacity: 0.6, duration: 0.7, ease: "power2.out" }, 24.3);
+      tl.from("#s4-quote", { y: 16, autoAlpha: 0, duration: 0.9, ease: "power3.out" }, 24.6);
+      tl.from("#s4-attribution", { y: 8, autoAlpha: 0, duration: 0.6, ease: "power2.out" }, 25.8);
+      tl.to("#s4", { autoAlpha: 0, duration: 1.0, ease: "power2.inOut" }, 31.0);
+
+      // === SLIDE 5 — CTA (32-38s) ===
+      tl.from("#s5-seal", { scale: 0.85, autoAlpha: 0, duration: 0.8, ease: "power2.out" }, 32.2);
+      tl.from("#s5-cta-label", { y: 16, autoAlpha: 0, duration: 0.7, ease: "power3.out" }, 32.6);
+      tl.from("#s5-cta-url", { y: 16, autoAlpha: 0, duration: 0.7, ease: "power3.out" }, 33.0);
+      tl.to("#s5-rule", { width: 160, duration: 0.8, ease: "power4.out" }, 33.2);
+      tl.to("#s5", { autoAlpha: 0, duration: 1.0, ease: "power2.inOut" }, 37.0);
+
+      // Register timeline
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

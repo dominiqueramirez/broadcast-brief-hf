@@ -1,0 +1,14 @@
+{
+  "name": "Broadcast Brief HF",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node:22",
+  "postCreateCommand": "npx --yes hyperframes@0.6.0 browser install",
+  "customizations": {
+    "vscode": {
+      "extensions": ["dbaeumer.vscode-eslint"]
+    }
+  },
+  "forwardPorts": [3002],
+  "portsAttributes": {
+    "3002": { "label": "HyperFrames Studio", "onAutoForward": "openBrowser" }
+  }
+}
