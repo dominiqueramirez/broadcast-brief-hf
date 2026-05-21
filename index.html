@@ -134,6 +134,13 @@
       #s5-cta-label { font-family: var(--font-display); font-size: 32px; font-weight: 700; color: var(--va-gold); letter-spacing: 0.01em; text-align: center; }
       #s5-cta-url { font-family: var(--font-mono); font-size: 20px; color: rgba(255,255,255,0.85); letter-spacing: 0.02em; margin-top: 12px; text-align: center; }
       #s5-rule { margin-top: 20px; height: 3px; width: 0; background: var(--va-gold); opacity: 0.6; }
+
+      /* F250 logo — persistent bottom-left */
+      #f250-logo {
+        position: absolute; bottom: 28px; left: 32px; z-index: 40;
+        width: 80px; height: auto; opacity: 0.7;
+        pointer-events: none;
+      }
     </style>
   </head>
   <body>
@@ -147,6 +154,9 @@
     >
       <div class="radial-light"></div>
       <div class="grain"></div>
+
+      <!-- F250 LOGO — persistent across all slides -->
+      <img id="f250-logo" src="assets/f250-white.png" alt="F250" />
 
       <!-- BACKGROUND MUSIC -->
       <audio class="clip" data-start="0" data-duration="38" data-track-index="1"
